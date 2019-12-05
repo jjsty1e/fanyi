@@ -66,9 +66,10 @@ $export->youdao = function ($data, $options = null) use ($output) {
 $export->dictionaryapi = function ($data, $options = null) use ($output) {
     $output->writeln('');
     $word = $data->entry[0]->hw;
-    $output->writeln(' ' . $word . '<gray>  ~  fanyi.youdao.com</gray>');
+    $output->writeln(' ' . $word . '<gray>  ~   dictionaryapi.com</gray>');
     $output->writeln('');
     foreach ($data->entry as $item) {
+        if (!isset($item->def) || !isset($item->def->dt)) continue;
         $strings = $item->def->dt;
         $outputString = function ($query, $string) use ($output){
             $string = trim(str_replace($query, "<comment>{$query}</comment>", $string));
