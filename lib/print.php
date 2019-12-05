@@ -10,23 +10,36 @@ $export = (object)[
 
 $export->iciba = function ($data, $options = null) use ($output) {
     $output->writeln('');
-
-    $output->writeln(
-        ' ' . $data->key . '  ' . "<magenta>英[ {$data->ps[0] }] 美[ {$data->ps[1]} ]</magenta>" . '<gray>  ~  iciba.com</gray>'
-    );
+    $ukPs = $usPs = $ps = '';
+    if (!empty($data->ps[0])) $ukPs = "英[ {$data->ps[0]} ] ";
+    if (!empty($data->ps[1])) $usPs = "美[ {$data->ps[1]} ] ";
+    if ($ukPs || $usPs) {
+        $ps = '  ' . "<magenta>{$ukPs}{$usPs}</magenta>";
+    }
+    $output->write(' <bold>' . $data->key . '</bold>');
+    $output->writeln($ps . '<gray>  ~  iciba.com</gray>');
     $output->writeln('');
-    $trans = [];
-    foreach ($data->pos as $key => $item) {
-        $trans[$key][0] = trim($item);
-    }
+    if (!empty($data->pos)) {
+        $trans = [];
+        if (is_array($data->pos)) {
+            foreach ($data->pos as $key => $item) {
+                $trans[$key][0] = trim($item);
+            }
 
-    foreach ($data->acceptation as $key => $item) {
-        $trans[$key][1] = trim($item);
+            foreach ($data->acceptation as $key => $item) {
+                $trans[$key][1] = trim($item);
+            }
+        }
+        if (is_string($data->pos)) {
+            $trans = [$data->pos, (string)$data->acceptation];
+        }
+        if (!empty($trans)) {
+            foreach ($trans as $item) {
+                $output->writeln(" - <info>{$item[0]} {$item[1]}</info>");
+            }
+            $output->writeln('');
+        }
     }
-    foreach ($trans as $item) {
-        $output->writeln(" - <info>{$item[0]} {$item[1]}</info>");
-    }
-    $output->writeln('');
     foreach ($data->sent as $key => $item) {
         $key++;
         $orig = trim(str_replace($data->key, "<comment>{$data->key}</comment>", $item->orig));
@@ -42,15 +55,27 @@ $export->iciba = function ($data, $options = null) use ($output) {
 
 $export->youdao = function ($data, $options = null) use ($output) {
     $output->writeln('');
-    $output->writeln(
-        ' ' . $data->query . '  ' . "<magenta>英[ {$data->basic->{'uk-phonetic'}}] 美[ {$data->basic->{'us-phonetic'}} ]</magenta>"
-        . '<gray>  ~  fanyi.youdao.com</gray>'
-    );
-    $output->writeln('');
-    foreach ($data->basic->explains as $item) {
-        $output->writeln(" - <info>{$item}</info>");
+    $cnPtic = $hkPtic = $usPtic = $ptic = '';
+    if (!empty($data->basic->{'uk-phonetic'})) $hkPtic = "英[ {$data->basic->{'uk-phonetic'}} ] ";
+    if (!empty($data->basic->{'us-phonetic'})) $usPtic = "美[ {$data->basic->{'us-phonetic'}} ] ";
+    if (empty($data->basic->{'uk-phonetic'}) &&
+        empty($data->basic->{'us-phonetic'}) &&
+        !empty($data->basic->phonetic)
+    ) {
+        $cnPtic = "[ {$data->basic->phonetic} ] ";
     }
+    if ($hkPtic || $usPtic) {
+        $ptic = '  ' . "<magenta>$cnPtic{$hkPtic}{$usPtic}</magenta>";
+    }
+    $output->write(' <bold>' . $data->query . '</bold>');
+    $output->writeln($ptic . '<gray>  ~  fanyi.youdao.com</gray>');
     $output->writeln('');
+    if (!empty($data->basic->explains)) {
+        foreach ($data->basic->explains as $item) {
+            $output->writeln(" - <info>{$item}</info>");
+        }
+        $output->writeln('');
+    }
     foreach ($data->web as $index => $item) {
         $index++;
         $key = trim(str_replace($data->query, "<comment>{$data->query}</comment>", $item->key));
@@ -65,22 +90,16 @@ $export->youdao = function ($data, $options = null) use ($output) {
 
 $export->dictionaryapi = function ($data, $options = null) use ($output) {
     $output->writeln('');
+    if (empty($data->entry) || !is_array($data->entry)) return null;
     $word = $data->entry[0]->hw;
     $output->writeln(' ' . $word . '<gray>  ~   dictionaryapi.com</gray>');
     $output->writeln('');
-    foreach ($data->entry as $item) {
+    $allStrings = [];
+    foreach ($data->entry as $key =>  $item) {
         if (!isset($item->def) || !isset($item->def->dt)) continue;
         $strings = $item->def->dt;
-        $outputString = function ($query, $string) use ($output){
-            $string = trim(str_replace($query, "<comment>{$query}</comment>", $string));
-            $string = trim(str_replace(ucfirst($query), "<comment>" . ucfirst($query) . "</comment>", $string));
-            return $output->writeln(" - <info>{$string}</info>");
-        };
         if (is_string($strings)) {
-            if ($strings = trim($strings, ' :')) {
-                call_user_func($outputString, $word, $strings);
-            }
-            continue;
+            $strings = [$strings];
         }
         $strings = array_filter($strings, function ($val) {
             return is_string($val) && strlen(trim($val, ' :')) > 0;
@@ -88,10 +107,17 @@ $export->dictionaryapi = function ($data, $options = null) use ($output) {
         $strings = array_map(function ($val) {
             return trim($val, ' :');
         }, $strings);
-        foreach ($strings as $string) {
-            call_user_func($outputString, $word, $string);
+        $allStrings = array_merge($allStrings, $strings);
+    }
+
+    foreach ($allStrings as $key => $string) {
+        if ($key <= 9) {
+            $string = trim(str_replace($word, "<comment>{$word}</comment>", $string));
+            $string = trim(str_replace(ucfirst($word), "<comment>" . ucfirst($word) . "</comment>", $string));
+            $output->writeln(" - <info>{$string}</info>");
         }
     }
+
     $output->writeln('');
     $output->writeln('  --------');
 };

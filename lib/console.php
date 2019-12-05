@@ -14,5 +14,7 @@ $output->getFormatter()->setStyle('magenta', new OutputFormatterStyle('magenta',
 $output->getFormatter()->setStyle('error', new OutputFormatterStyle('red', 'default'));
 $output->getFormatter()->setStyle('question', new OutputFormatterStyle('cyan', 'default'));
 $output->getFormatter()->setStyle('gray', new OutputFormatterStyle('cyan', 'default'));
+$output->getFormatter()->setStyle('cyan', new OutputFormatterStyle('cyan', 'default'));
+$output->getFormatter()->setStyle('bold', new OutputFormatterStyle('default', 'default', ['bold']));
 
 return $output;
