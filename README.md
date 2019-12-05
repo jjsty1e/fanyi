@@ -6,6 +6,8 @@ A PHP port of [afc163/fanyi](https://github.com/afc163/fanyi)
 
 > A 🇨🇳 and 🇺🇸 translate tool in your command line.
 
+![jaggle/fanyi](https://i.loli.net/2019/12/05/XkxtKRfSJumsIUQ.png)
+
 </div>
 
 ## Install
