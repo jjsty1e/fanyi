@@ -18,12 +18,17 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-require 'vendor/autoload.php';
+foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/vendor/autoload.php'] as $autoload) {
+    if (file_exists($autoload)) {
+        require_once $autoload;
+    }
+}
+
 require 'lib/functions.php';
 $print = require 'lib/print.php';
 
 $arguments = $argv;
-$source = require_json('lib/source.json');
+$source = require_json(__DIR__ . '/lib/source.json');
 $app = array_shift($arguments);
 $word = urlencode(implode(' ', $arguments));
 
