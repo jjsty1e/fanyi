@@ -11,8 +11,15 @@ $export = (object)[
 $export->iciba = function ($data, $options = null) use ($output) {
     $output->writeln('');
     $ukPs = $usPs = $ps = '';
-    if (!empty($data->ps[0])) $ukPs = "英[ {$data->ps[0]} ] ";
-    if (!empty($data->ps[1])) $usPs = "美[ {$data->ps[1]} ] ";
+    if (is_array($data->ps)) {
+        if (!empty($data->ps[0])) $ukPs = "英[ {$data->ps[0]} ] ";
+        if (!empty($data->ps[1])) $usPs = "美[ {$data->ps[1]} ] ";
+    } else {
+        if (!empty($data->ps)) {
+            $usPs = "美[ {$data->ps} ] ";
+        }
+    }
+
     if ($ukPs || $usPs) {
         $ps = '  ' . "<magenta>{$ukPs}{$usPs}</magenta>";
     }
@@ -31,10 +38,11 @@ $export->iciba = function ($data, $options = null) use ($output) {
             }
         }
         if (is_string($data->pos)) {
-            $trans = [$data->pos, (string)$data->acceptation];
+            $trans[] = [$data->pos, (string)$data->acceptation];
         }
         if (!empty($trans)) {
             foreach ($trans as $item) {
+                $item = array_map('trim', $item);
                 $output->writeln(" - <info>{$item[0]} {$item[1]}</info>");
             }
             $output->writeln('');

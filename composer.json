@@ -1,6 +1,6 @@
 {
     "name": "jaggle/fanyi",
-    "description": "a PHP port of project afc163/fanyi",
+    "description": "a PHP version of project afc163/fanyi",
     "keywords": ["translation tool", "English to Chinese"],
     "version": "v0.2.5",
     "type": "project",

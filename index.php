@@ -40,7 +40,12 @@ $inputDef->addOption(new InputOption('version', 'v', InputOption::VALUE_OPTIONAL
 $input = new ArgvInput([$app, $word], $inputDef);
 $word = $input->getArgument('word');
 
-if (strlen($word) === 0 || $input->getOption('help') !== false) {
+if (strlen($word) === 0) {
+    if ($input->getOption('version') !== false) {
+        return $print->output->writeln(require_json('composer.json')->version);
+    }
+
+    // same as $input->getOption('help') !== false
     $print->output->writeln('');
     $print->output->writeln('<gray>Examples:</gray>');
     $print->output->writeln('<cyan>  $ </cyan>fanyi word');
@@ -49,12 +54,11 @@ if (strlen($word) === 0 || $input->getOption('help') !== false) {
     return $print->output->writeln('');
 }
 
-if ($input->getOption('version') !== false) {
-    return $print->output->writeln(require_json('composer.json')->version);
+try {
+    $process = new Process('say ' . urldecode($word));
+    $process->start();
 }
-
-$process = new Process('say ' . urldecode($word));
-$process->start();
+catch (\Exception $e) {}
 
 $request = new Client();
 
