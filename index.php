@@ -27,7 +27,7 @@ foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/vendor/autoload.php'] as 
 require 'lib/functions.php';
 $print = require 'lib/print.php';
 
-const FANYI_VERSION = 'v0.2.7';
+const FANYI_VERSION = 'v0.2.8';
 
 $arguments = $argv;
 $source = require_json(__DIR__ . '/lib/source.json');
