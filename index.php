@@ -27,6 +27,8 @@ foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/vendor/autoload.php'] as 
 require 'lib/functions.php';
 $print = require 'lib/print.php';
 
+const FANYI_VERSION = 'v0.2.7';
+
 $arguments = $argv;
 $source = require_json(__DIR__ . '/lib/source.json');
 $app = array_shift($arguments);
@@ -42,7 +44,7 @@ $word = $input->getArgument('word');
 
 if (strlen($word) === 0) {
     if ($input->getOption('version') !== false) {
-        return $print->output->writeln(require_json('composer.json')->version);
+        return $print->output->writeln(FANYI_VERSION);
     }
 
     // same as $input->getOption('help') !== false
