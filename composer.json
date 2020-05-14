@@ -17,5 +17,5 @@
             "email": "singviy@gmail.com"
         }
     ],
-    "bin": ["bin/fanyi"]
+    "bin": ["bin/fanyi", "bin/fy"]
 }
