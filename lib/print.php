@@ -11,11 +11,12 @@ $export = (object)[
 $export->iciba = function ($data, $options = null) use ($output) {
     $output->writeln('');
     $ukPs = $usPs = $ps = '';
-    if (is_array($data->ps)) {
-        if (!empty($data->ps[0])) $ukPs = "英[ {$data->ps[0]} ] ";
-        if (!empty($data->ps[1])) $usPs = "美[ {$data->ps[1]} ] ";
-    } else {
-        if (!empty($data->ps)) {
+
+    if (!empty($data->ps)) {
+        if (is_array($data->ps)) {
+            if (!empty($data->ps[0])) $ukPs = "英[ {$data->ps[0]} ] ";
+            if (!empty($data->ps[1])) $usPs = "美[ {$data->ps[1]} ] ";
+        } else {
             $usPs = "美[ {$data->ps} ] ";
         }
     }
@@ -26,6 +27,7 @@ $export->iciba = function ($data, $options = null) use ($output) {
     $output->write(' <bold>' . $data->key . '</bold>');
     $output->writeln($ps . '<gray>  ~  iciba.com</gray>');
     $output->writeln('');
+
     if (!empty($data->pos)) {
         $trans = [];
         if (is_array($data->pos)) {
@@ -48,13 +50,16 @@ $export->iciba = function ($data, $options = null) use ($output) {
             $output->writeln('');
         }
     }
-    foreach ($data->sent as $key => $item) {
-        $key++;
-        $orig = trim(str_replace($data->key, "<comment>{$data->key}</comment>", $item->orig));
-        $orig = trim(str_replace(ucfirst($data->key), "<comment>" . ucfirst($data->key) . "</comment>", $orig));
-        $trans = trim($item->trans);
-        $output->writeln(" {$key}. {$orig}");
-        $output->writeln(str_pad(' ', 4) . "<question>{$trans}</question>");
+
+    if (!empty($data->sent)) {
+        foreach ($data->sent as $key => $item) {
+            $key++;
+            $orig = trim(str_replace($data->key, "<comment>{$data->key}</comment>", $item->orig));
+            $orig = trim(str_replace(ucfirst($data->key), "<comment>" . ucfirst($data->key) . "</comment>", $orig));
+            $trans = trim($item->trans);
+            $output->writeln(" {$key}. {$orig}");
+            $output->writeln(str_pad(' ', 4) . "<question>{$trans}</question>");
+        }
     }
 
     $output->writeln('');
@@ -78,20 +83,32 @@ $export->youdao = function ($data, $options = null) use ($output) {
     $output->write(' <bold>' . $data->query . '</bold>');
     $output->writeln($ptic . '<gray>  ~  fanyi.youdao.com</gray>');
     $output->writeln('');
+
     if (!empty($data->basic->explains)) {
         foreach ($data->basic->explains as $item) {
             $output->writeln(" - <info>{$item}</info>");
         }
         $output->writeln('');
     }
-    foreach ($data->web as $index => $item) {
-        $index++;
-        $key = trim(str_replace($data->query, "<comment>{$data->query}</comment>", $item->key));
-        $key = trim(str_replace(ucfirst($data->query), "<comment>" . ucfirst($data->query) . "</comment>", $key));
-        $value = implode(', ', $item->value);
-        $output->writeln(" {$index}. {$key}");
-        $output->writeln(str_pad(' ', 4) . "<question>{$value}</question>");
+
+    if (!empty($data->web)) {
+        foreach ($data->web as $index => $item) {
+            $index++;
+            $key = trim(str_replace($data->query, "<comment>{$data->query}</comment>", $item->key));
+            $key = trim(str_replace(ucfirst($data->query), "<comment>" . ucfirst($data->query) . "</comment>", $key));
+            $value = implode(', ', $item->value);
+            $output->writeln(" {$index}. {$key}");
+            $output->writeln(str_pad(' ', 4) . "<question>{$value}</question>");
+        }
     }
+
+    if (!empty($data->translation)) {
+        $data->translation = (array)$data->translation;
+        foreach ($data->translation as $trans) {
+            $output->writeln(" - <info>{$trans}</info>");
+        }
+    }
+
     $output->writeln('');
     $output->writeln('  --------');
 };

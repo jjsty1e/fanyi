@@ -4,7 +4,7 @@ function require_json($file) {
     return json_decode(file_get_contents($file));
 }
 
-function parse_xml($xml, callable $callback){
+function parse_xml($xml, callable $callback) {
     $data = null;
     try {
         $data = simplexml_load_string($xml);
