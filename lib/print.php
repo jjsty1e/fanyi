@@ -98,7 +98,10 @@ $export->youdao = function ($data, $options = null) use ($output) {
 
 $export->dictionaryapi = function ($data, $options = null) use ($output) {
     $output->writeln('');
-    if (empty($data->entry) || !is_array($data->entry)) return null;
+    if (empty($data->entry)) return null;
+    if (!is_array($data->entry)) {
+        $data->entry = [$data->entry];
+    }
     $word = $data->entry[0]->hw;
     $output->writeln(' ' . $word . '<gray>  ~   dictionaryapi.com</gray>');
     $output->writeln('');

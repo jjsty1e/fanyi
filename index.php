@@ -91,7 +91,7 @@ $promises[] = $request->getAsync(str_replace('${word}', $word, $source->youdao))
     );
 
 // dictionaryapi
-$promises[] = $request->getAsync(str_replace('${word}', $word, $source->dictionaryapi), ['timeout' => 6])
+$promises[] = $request->getAsync(str_replace('${word}', $word, $source->dictionaryapi), ['timeout' => 12])
     ->then(
         function (ResponseInterface $response) use ($print) {
             if ($response->getStatusCode() === 200) {
