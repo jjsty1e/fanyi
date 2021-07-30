@@ -2,7 +2,7 @@
 
 # Fanyi
 
-A PHP port of [afc163/fanyi](https://github.com/afc163/fanyi)
+A PHP version of [afc163/fanyi](https://github.com/afc163/fanyi)
 
 > A 🇨🇳 and 🇺🇸 translate tool in your command line.
 
@@ -13,8 +13,10 @@ A PHP port of [afc163/fanyi](https://github.com/afc163/fanyi)
 ## Install
 
 ```bash
-$ composer global require jaggle/fanyi
+$ composer global require jjsty1e/fanyi
 ```
+
+> I suggest you to use [cgr](https://github.com/consolidation/cgr) to install this command to avoide dependices conflicts.
 
 ## Usage
 
