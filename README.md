@@ -18,7 +18,7 @@ $ composer global require jjsty1e/fanyi
 
 > I suggest you to use [cgr](https://github.com/consolidation/cgr) to install this command to avoide dependices conflicts.
 
-then add `~/.composer/vendor/bin` to `PATH` if you haven't yet.
+then add `$HOME/.composer/vendor/bin` to `PATH` if you haven't yet.
 
 ## Usage
 
